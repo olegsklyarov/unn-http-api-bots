@@ -2,8 +2,11 @@
 ==========
 
 ```bash
-# запустить сервер
+# ИЛИ запустить сервер на Python
 python form-file-upload-server.py
+
+# ИЛИ запустить сервер на PHP
+php -S 0.0.0.0:8000 form-file-upload-server.php
 
 # отправить HTTP запрос при помощи утилиты curl
 # где /Users/oleg/harry.jpg - заменить на абсолютный путь к файлу для загрузки
