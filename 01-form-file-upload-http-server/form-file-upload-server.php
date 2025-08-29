@@ -1,9 +1,8 @@
 <?php
 
-ini_set('upload_max_filesize', '1M');
-ini_set('post_max_size', '1M');
-
 $UPLOAD_DIR = __DIR__ . '/uploaded_files';
+$UPLOAD_MAX_FILE_SIZE = ini_get('upload_max_filesize');
+$POST_MAX_SIZE = ini_get('post_max_size');
 
 if (isset($_FILES['uploaded_file'])) {
     $uploaded_file = $_FILES['uploaded_file'];
@@ -36,7 +35,7 @@ if (isset($_FILES['uploaded_file'])) {
 <html>
 <head><title>Upload File</title></head>
 <body>
-    <h1>Upload a File</h1>
+    <h1>Upload a File (max filesize <?= $UPLOAD_MAX_FILE_SIZE ?>, max post size = <?= $POST_MAX_SIZE ?>)</h1>
     <form action="/" method="post" enctype="multipart/form-data">
         <input type="file" name="uploaded_file">
         <input type="submit" value="Upload">
