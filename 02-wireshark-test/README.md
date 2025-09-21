@@ -5,6 +5,27 @@
   - [RFC 793 Transmission Control Protocol, September 1981](https://www.rfc-editor.org/info/rfc793)
   - [RFC 791 Internet Protocol, September 1981](https://www.rfc-editor.org/info/rfc791)
 
+## Принципы шифрования данных (подходим к HTTPS)
+
+message - сообщение
+Alice: PrivateKey_Alice, PublicKey_Alice
+Bob: PrivateKey_Bob, PublicKey_Bob
+
+Элис хочет отправить сообщение message Бобу, чтобы никто кроме Боба не мог его прочитать.
+
+1. Элис запрашивает у Боба его PublicKey_Bob
+2. Элис шифрует свое сообщение message_encrypted = Encrypt(message, PublicKey_Bob)
+3. Элис отправляет message_encrypted Бобу по незащищенному каналу.
+4. Боб расшифровывает message_decrypted = Decrypt(message_encrypted, PrivateKey_Bob)
+
+На выходе имеем: message == message_decrypted.
+
+То есть message == Decrypt(Encrypt(message, PublicKey_Bob), PrivateKey_Bob)
+
+Правила безопасности:
+- Публичнй ключ можно и нужно опубликовать в открытом доступе для всех желающих. Например см. https://keys.openpgp.org
+- Приватный ключ храним в секрете!!!
+
 ## Смотрим HTTP трафик
 
 ```bash
