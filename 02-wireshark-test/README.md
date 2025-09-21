@@ -23,8 +23,52 @@ Bob: PrivateKey_Bob, PublicKey_Bob
 То есть message == Decrypt(Encrypt(message, PublicKey_Bob), PrivateKey_Bob)
 
 Правила безопасности:
-- Публичнй ключ можно и нужно опубликовать в открытом доступе для всех желающих. Например см. https://keys.openpgp.org
+- Открытый ключ можно и нужно опубликовать в открытом доступе для всех желающих. Например см. https://keys.openpgp.org
 - Приватный ключ храним в секрете!!!
+
+
+## Практика шифрования файла при помощи GNU Privacy Guard (GPG)
+
+https://gnupg.org
+
+Задача: Элис требуется отправить файл message.txt Бобу так, чтобы никто кроме Боба не мог прочитать этот файл.
+
+```bash
+# Боб создает связку GPG ключей: name = Bob, email = bob@example.com
+(Bob) $ gpg --full-gen-key
+
+# Боб делает экспорт открытого ключа, чтобы передать его Элис
+(Bob) $ gpg --export -a bob@example.com > bob_public.gpg
+
+# Боб отправляет файл bob_public.gpg Элис доступным способом (почта, telegram, флешка и тп)
+
+# Элис импортирует ключ Боба в GPG
+(Alice) $ gpg --import bob_public.gpg
+
+# Элис делает ключ Боба доверенным
+(Alice) $ gpg --edit-key bob@example.com
+> trust
+> 5
+> quit
+
+# Элис шифрует файл с сообщением при помощи открытого ключа Боба
+(Alice) $ gpg -e -a -r bob@example.com message.txt
+
+# Элис отправляет зашифрованный файл message.txt.asc Бобу
+
+# Боб расшифровывает message.txt.asc
+(Bob) $ gpg -d -o message.txt message.txt.asc
+```
+
+### Полезные команды
+
+```bash
+# список открытых ключей
+$ gpg -k
+
+# список секретных ключей
+$ gpg -K
+```
 
 ## Смотрим HTTP трафик
 
@@ -88,7 +132,7 @@ https://docs.pyrogram.org/faq/why-is-the-api-key-needed-for-bots
 https://core.telegram.org/bots
 https://core.telegram.org/bots/api
 
-1. Бот - это особоый вид пользователья телеграмм.
+1. Бот - это особый вид пользователя Telegram.
 2. Создается только через BotFather.
 3. Не может написать первым (уважает приватность пользователей, так Bot API избегает спама)
 4. За логику бота отвечает пользовательская программа, которая общается с Bot API по HTTPS протоколу.
@@ -104,7 +148,7 @@ Getting updates: long pooling / webhooks
 
 Отправляем сообщение
 
-Получаем сообщения при помощи getUpdates. Исследуем как отметить сообение прочитанным!
+Получаем сообщения при помощи getUpdates. Исследуем как отметить сообщение прочитанным!
 
 Работаем сначала на голых curl запросах.
 
