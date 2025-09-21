@@ -1,3 +1,10 @@
+## Замечания про HTTP
+
+- Сетевая модель OSI: стек протоколов, инкапсуляция aka "матрешка" или "стек почтовых конвертов"
+- Первоисточник - стандарты RFC, публикуются организацией https://www.ietf.org. Сайт https://www.rfc-editor.org. Примеры:
+  - [RFC 793 Transmission Control Protocol, September 1981](https://www.rfc-editor.org/info/rfc793)
+  - [RFC 791 Internet Protocol, September 1981](https://www.rfc-editor.org/info/rfc791)
+
 ## Смотрим HTTP трафик
 
 ```bash
@@ -62,7 +69,7 @@ https://core.telegram.org/bots/api
 
 1. Бот - это особоый вид пользователья телеграмм.
 2. Создается только через BotFather.
-3. Не может написать первым (чтобы избежать спама)
+3. Не может написать первым (уважает приватность пользователей, так Bot API избегает спама)
 4. За логику бота отвечает пользовательская программа, которая общается с Bot API по HTTPS протоколу.
 
 
