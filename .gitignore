@@ -1,2 +1,6 @@
 .vscode
 uploaded_files/
+*.pem
+.env
+.venv
+__pycache__
