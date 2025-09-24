@@ -7,13 +7,13 @@ from faker import Faker
 logging.basicConfig(level=logging.INFO)
 
 gpg = gnupg.GPG(gnupghome="./gnupghome")
-gpg.encoding = 'utf-8'
+gpg.encoding = "utf-8"
 
 
 def remove_existing_gpg_keys() -> None:
     while len(gpg.list_keys()) > 0:
         logging.info("Remove already existed GPG keys")
-        gpg.delete_keys(list(map(lambda key: key['fingerprint'], gpg.list_keys())))
+        gpg.delete_keys(list(map(lambda key: key["fingerprint"], gpg.list_keys())))
         logging.info("Done")
 
 
@@ -25,13 +25,13 @@ def main() -> None:
 
     keys = gpg.list_keys()
     assert len(keys) == 1
-    assert keys[0]['type'] == "pub"
-    assert keys[0]['length'] == "4096"
-    assert keys[0]['algo'] == "1"
-    assert len(keys[0]['uids']) == 1
+    assert keys[0]["type"] == "pub"
+    assert keys[0]["length"] == "4096"
+    assert keys[0]["algo"] == "1"
+    assert len(keys[0]["uids"]) == 1
 
-    uid = keys[0]['uids'][0]
-    fingerprint = keys[0]['fingerprint']
+    uid = keys[0]["uids"][0]
+    fingerprint = keys[0]["fingerprint"]
 
     message = Faker().name()
     message_encrypted = gpg.encrypt(message, fingerprint, always_trust=True)
