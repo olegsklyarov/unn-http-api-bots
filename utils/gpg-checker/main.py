@@ -12,9 +12,8 @@ gpg.encoding = "utf-8"
 
 def remove_existing_gpg_keys() -> None:
     while len(gpg.list_keys()) > 0:
-        logging.info("Remove already existed GPG keys")
+        logging.info("Remove already existing GPG keys")
         gpg.delete_keys(list(map(lambda key: key["fingerprint"], gpg.list_keys())))
-        logging.info("Done")
 
 
 def main() -> None:
