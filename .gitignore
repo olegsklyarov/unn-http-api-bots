@@ -1,6 +1,9 @@
 .vscode
+.idea
+.DS_Store
 uploaded_files/
 *.pem
+*.gpg
 .env
 .venv
 __pycache__
