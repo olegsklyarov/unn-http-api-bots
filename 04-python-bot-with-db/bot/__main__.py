@@ -1,0 +1,70 @@
+import json
+import os
+import sqlite3
+import time
+
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+def get_updates(offset: int) -> dict:
+    response = requests.post(
+        f"{os.getenv("TELEGRAM_BASE_URI")}/getUpdates",
+        params={"offset": offset},
+    )
+    response_json = response.json()
+    assert response_json["ok"] == True
+    updates = response_json["result"]
+    return updates
+
+
+def get_next_offset(updates: dict) -> int:
+    next_offset = 0
+    for update in updates:
+        next_offset = max(next_offset, update["update_id"] + 1)
+    return next_offset
+
+
+def send_message(chat_id: int, text: str) -> None:
+    response = requests.post(
+        f"{os.getenv("TELEGRAM_BASE_URI")}/sendMessage",
+        params={
+            "chat_id": chat_id,
+            "text": text,
+        },
+    )
+    response_json = response.json()
+    assert response_json["ok"] == True
+
+
+def persist_updates(updates: dict) -> None:
+    connection = sqlite3.connect(os.getenv("SQLITE_DATABASE_PATH"))
+    with connection:
+        data = []
+        for update in updates:
+            data.append((json.dumps(update),))
+        connection.executemany("INSERT INTO telegram_events (payload) VALUES (?)", data)
+
+
+def main() -> None:
+    try:
+        updates_next_offset = 0
+        while True:
+            updates = get_updates(updates_next_offset)
+            persist_updates(updates)
+            updates_next_offset = get_next_offset(updates)
+            for update in updates:
+                send_message(
+                    chat_id=update["message"]["chat"]["id"],
+                    text=update["message"]["text"],
+                )
+                print(".", end="", flush=True)
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("\nBye!")
+
+
+if __name__ == "__main__":
+    main()
