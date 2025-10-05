@@ -9,15 +9,22 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def get_updates(offset: int) -> dict:
+def make_request(method: str, **kwargs) -> dict:
     response = requests.post(
-        f"{os.getenv("TELEGRAM_BASE_URI")}/getUpdates",
-        params={"offset": offset},
+        f"{os.getenv("TELEGRAM_BASE_URI")}/{method}",
+        params=kwargs,
     )
     response_json = response.json()
     assert response_json["ok"] == True
-    updates = response_json["result"]
-    return updates
+    return response_json["result"]
+
+
+def get_updates(offset: int) -> dict:
+    return make_request("getUpdates", offset=offset)
+
+
+def send_message(chat_id: int, text: str) -> dict:
+    return make_request("sendMessage", chat_id=chat_id, text=text)
 
 
 def get_next_offset(updates: dict) -> int:
@@ -25,18 +32,6 @@ def get_next_offset(updates: dict) -> int:
     for update in updates:
         next_offset = max(next_offset, update["update_id"] + 1)
     return next_offset
-
-
-def send_message(chat_id: int, text: str) -> None:
-    response = requests.post(
-        f"{os.getenv("TELEGRAM_BASE_URI")}/sendMessage",
-        params={
-            "chat_id": chat_id,
-            "text": text,
-        },
-    )
-    response_json = response.json()
-    assert response_json["ok"] == True
 
 
 def persist_updates(updates: dict) -> None:
