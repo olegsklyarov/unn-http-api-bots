@@ -26,17 +26,29 @@ def make_request(method: str, **kwargs) -> dict:
         return response_json["result"]
 
 
-def get_updates(offset: int, **kwargs) -> dict:
-    return make_request("getUpdates", offset=offset, **kwargs)
+def get_updates(**kwargs) -> dict:
+    """
+    https://core.telegram.org/bots/api#getupdates
+    """
+    return make_request("getUpdates", **kwargs)
 
 
 def send_message(chat_id: int, text: str, **kwargs) -> dict:
+    """
+    https://core.telegram.org/bots/api#sendmessage
+    """
     return make_request("sendMessage", chat_id=chat_id, text=text, **kwargs)
 
 
 def answer_callback_query(callback_query_id: str, **kwargs) -> dict:
+    """
+    https://core.telegram.org/bots/api#answercallbackquery
+    """
     return make_request("answerCallbackQuery", callback_query_id=callback_query_id, **kwargs)
 
 
 def delete_message(chat_id: int, message_id: int) -> dict:
+    """
+    https://core.telegram.org/bots/api#deletemessage
+    """
     return make_request("deleteMessage", chat_id=chat_id, message_id=message_id)
