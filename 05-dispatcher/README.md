@@ -10,11 +10,20 @@ Only receive updates of these types
 
 https://refactoring.guru/design-patterns/observer
 
-## Работа с Inline Keyboard
+## sendMessage -> reply_markup
 
-TODO
+### Работа с ReplyKeyboardMarkup
 
-## Добавляем обработчик CallbackQuery
+https://core.telegram.org/bots/api#replykeyboardmarkup
+
+### Работа с InlineKeyboardMarkup
+
+https://core.telegram.org/bots/api#inlinekeyboardmarkup
+
+#### Добавляем обработчик CallbackQuery
+
+Обязательно вызвать API answerCallbackQuery
+API deleteMessage
 
 TODO
 

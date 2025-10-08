@@ -26,9 +26,17 @@ def make_request(method: str, **kwargs) -> dict:
         return response_json["result"]
 
 
-def get_updates(offset: int) -> dict:
-    return make_request("getUpdates", offset=offset)
+def get_updates(offset: int, **kwargs) -> dict:
+    return make_request("getUpdates", offset=offset, **kwargs)
 
 
-def send_message(chat_id: int, text: str) -> dict:
-    return make_request("sendMessage", chat_id=chat_id, text=text)
+def send_message(chat_id: int, text: str, **kwargs) -> dict:
+    return make_request("sendMessage", chat_id=chat_id, text=text, **kwargs)
+
+
+def answer_callback_query(callback_query_id: str, **kwargs) -> dict:
+    return make_request("answerCallbackQuery", callback_query_id=callback_query_id, **kwargs)
+
+
+def delete_message(chat_id: int, message_id: int) -> dict:
+    return make_request("deleteMessage", chat_id=chat_id, message_id=message_id)

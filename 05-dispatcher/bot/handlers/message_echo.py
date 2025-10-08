@@ -1,11 +1,12 @@
 import bot.telegram_api_client
+from bot.filters import is_message_with_text
 from bot.handler import Handler
 from bot.handler_result import HandlerStatus
 
 
 class MessageEcho(Handler):
     def can_handle(self, update: dict) -> bool:
-        return "message" in update and "text" in update["message"]
+        return is_message_with_text(update)
 
     def handle(self, update: dict) -> HandlerStatus:
         bot.telegram_api_client.send_message(
