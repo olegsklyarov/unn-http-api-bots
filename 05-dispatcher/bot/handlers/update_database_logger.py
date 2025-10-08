@@ -5,6 +5,10 @@ from bot.handler_result import HandlerStatus
 
 
 class UpdateDatabaseLogger(Handler):
+    """
+    Должен быть добавлен первым обработчиком
+    """
+
     def can_handle(self, update: dict) -> bool:
         return True
 
