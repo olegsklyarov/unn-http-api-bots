@@ -7,12 +7,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def get_telegram_base_uri() -> str:
+    return f"https://api.telegram.org/bot{os.getenv('TELEGRAM_TOKEN')}"
+
+
+def get_telegram_file_uri() -> str:
+    return f"https://api.telegram.org/file/bot{os.getenv('TELEGRAM_TOKEN')}"
+
+
 def make_request(method: str, **kwargs) -> dict:
     json_data = json.dumps(kwargs).encode('utf-8')
 
     request = urllib.request.Request(
         method='POST',
-        url=f"{os.getenv("TELEGRAM_BASE_URI")}/{method}",
+        url=f"{get_telegram_base_uri()}/{method}",
         data=json_data,
         headers={
             'Content-Type': 'application/json',
@@ -24,6 +32,11 @@ def make_request(method: str, **kwargs) -> dict:
         response_json = json.loads(response_body)
         assert response_json["ok"] == True
         return response_json["result"]
+
+
+def download_file(file_path: str) -> None:
+    url = f"{get_telegram_file_uri()}/{file_path}"
+    urllib.request.urlretrieve(url, file_path)
 
 
 def get_updates(**kwargs) -> dict:
@@ -52,3 +65,10 @@ def delete_message(chat_id: int, message_id: int) -> dict:
     https://core.telegram.org/bots/api#deletemessage
     """
     return make_request("deleteMessage", chat_id=chat_id, message_id=message_id)
+
+
+def get_file(file_id: str) -> dict:
+    """
+    https://core.telegram.org/bots/api#getfile
+    """
+    return make_request("getFile", file_id=file_id)

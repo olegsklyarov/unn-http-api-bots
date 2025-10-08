@@ -3,3 +3,6 @@ def is_message_with_text(update: dict) -> bool:
 
 def is_callback_query(update: dict) -> bool:
     return 'callback_query' in update
+
+def is_message_with_photo(update: dict) -> bool:
+    return 'message' in update and 'photo' in update['message']

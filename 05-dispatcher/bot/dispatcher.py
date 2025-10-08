@@ -4,13 +4,14 @@ from bot.handler_result import HandlerStatus
 
 class Dispatcher:
     def __init__(self) -> None:
-        self.handlers: list[Handler] = []
+        self._handlers: list[Handler] = []
 
-    def add_handler(self, handler: Handler) -> None:
-        self.handlers.append(handler)
+    def add_handlers(self, *handlers: Handler) -> None:
+        for handler in handlers:
+            self._handlers.append(handler)
 
     def dispatch(self, update: dict) -> None:
-        for handler in self.handlers:
+        for handler in self._handlers:
             if handler.can_handle(update):
                 if handler.handle(update) == HandlerStatus.STOP:
                     break
