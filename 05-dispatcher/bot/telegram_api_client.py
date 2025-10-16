@@ -36,7 +36,12 @@ def make_request(method: str, **kwargs) -> dict:
 
 def download_file(file_path: str) -> None:
     url = f"{get_telegram_file_uri()}/{file_path}"
-    urllib.request.urlretrieve(url, file_path)
+    downloads_dir = "downloads"
+    if not os.path.exists(downloads_dir):
+        os.makedirs(downloads_dir, exist_ok=True)
+    filename = os.path.basename(file_path)
+    destination_path = os.path.join(downloads_dir, filename)
+    urllib.request.urlretrieve(url, destination_path)
 
 
 def get_updates(**kwargs) -> dict:
