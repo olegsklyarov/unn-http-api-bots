@@ -1,12 +1,12 @@
 import bot.telegram_api_client
-from bot.filters import is_message_with_document
+from bot.filters import is_message_with_type
 from bot.handler import Handler
 from bot.handler_result import HandlerStatus
 
 
 class MessageDocument(Handler):
     def can_handle(self, update: dict) -> bool:
-        return is_message_with_document(update)
+        return is_message_with_type(update, 'document')
 
     def handle(self, update: dict) -> HandlerStatus:
         response = bot.telegram_api_client.get_file(update['message']['document']['file_id'])

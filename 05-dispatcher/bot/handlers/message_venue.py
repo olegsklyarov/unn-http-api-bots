@@ -1,12 +1,12 @@
 import bot.telegram_api_client
-from bot.filters import is_message_with_venue
+from bot.filters import is_message_with_type
 from bot.handler import Handler
 from bot.handler_result import HandlerStatus
 
 
 class MessageVenue(Handler):
     def can_handle(self, update: dict) -> bool:
-        return is_message_with_venue(update)
+        return is_message_with_type(update, 'venue')
 
     def handle(self, update: dict) -> HandlerStatus:
         venue = update['message']['venue']

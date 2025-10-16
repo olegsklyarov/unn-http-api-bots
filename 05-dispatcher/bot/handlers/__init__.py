@@ -15,6 +15,7 @@ from bot.handlers.message_poll import MessagePoll
 from bot.handlers.message_dice import MessageDice
 from bot.handlers.message_photo import MessagePhoto
 from bot.handlers.message_start import MessageStart
+from bot.handlers.message_echo import MessageEcho
 from bot.handlers.update_database_logger import UpdateDatabaseLogger
 
 
@@ -22,6 +23,7 @@ def get_handlers() -> list[Handler]:
     return [
         UpdateDatabaseLogger(),
         MessageStart(),
+        MessageEcho(),
         MessageButtonInline(),
         CallbackCancel(),
         MessageDocument(),

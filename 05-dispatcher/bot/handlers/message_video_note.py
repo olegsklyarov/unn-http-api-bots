@@ -4,12 +4,12 @@ from bot.handler import Handler
 from bot.handler_result import HandlerStatus
 
 
-class MessageVideo(Handler):
+class MessageVideoNote(Handler):
     def can_handle(self, update: dict) -> bool:
-        return is_message_with_type(update, 'video')
+        return is_message_with_type(update, 'video_note')
 
     def handle(self, update: dict) -> HandlerStatus:
-        response = bot.telegram_api_client.get_file(update['message']['video']['file_id'])
+        response = bot.telegram_api_client.get_file(update['message']['video_note']['file_id'])
         bot.telegram_api_client.download_file(response['file_path'])
         return HandlerStatus.STOP
 

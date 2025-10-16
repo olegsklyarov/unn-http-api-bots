@@ -2,14 +2,14 @@ import json
 
 import bot.telegram_api_client
 from bot.constants import BUTTON_INLINE, CALLBACK_CANCEL
-from bot.filters import is_message_with_text
+from bot.filters import is_message_with_type
 from bot.handler import Handler
 from bot.handler_result import HandlerStatus
 
 
 class MessageButtonInline(Handler):
     def can_handle(self, update: dict) -> bool:
-        return is_message_with_text(update) and update['message']['text'] == BUTTON_INLINE
+        return is_message_with_type(update, 'text') and update['message']['text'] == BUTTON_INLINE
 
     def handle(self, update: dict) -> HandlerStatus:
         bot.telegram_api_client.send_message(

@@ -1,12 +1,12 @@
 import bot.telegram_api_client
-from bot.filters import is_message_with_dice
+from bot.filters import is_message_with_type
 from bot.handler import Handler
 from bot.handler_result import HandlerStatus
 
 
 class MessageDice(Handler):
     def can_handle(self, update: dict) -> bool:
-        return is_message_with_dice(update)
+        return is_message_with_type(update, 'dice')
 
     def handle(self, update: dict) -> HandlerStatus:
         dice = update['message']['dice']
