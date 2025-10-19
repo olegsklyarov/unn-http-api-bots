@@ -1,19 +1,18 @@
-from bot.database_client import user_exists, create_user
+from bot.database_client import ensure_user_exists
 from bot.handler import Handler
 from bot.handler_result import HandlerStatus
 
 
 class EnsureUserExists(Handler):
-    def can_handle(self, update: dict) -> bool:
+    def can_handle(self, update: dict, user_state: dict = None) -> bool:
         # This handler should run for any update that has a user ID
         return "message" in update and "from" in update["message"]
 
-    def handle(self, update: dict) -> HandlerStatus:
+    def handle(self, update: dict, user_state: dict = None) -> HandlerStatus:
         telegram_id = update["message"]["from"]["id"]
 
-        # Check if user exists, if not create them
-        if not user_exists(telegram_id):
-            create_user(telegram_id)
+        # Ensure user exists (check and create if needed in single transaction)
+        ensure_user_exists(telegram_id)
 
         # Continue processing with other handlers
         return HandlerStatus.CONTINUE

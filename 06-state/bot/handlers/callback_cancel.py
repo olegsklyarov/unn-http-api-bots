@@ -6,10 +6,10 @@ from bot.handler_result import HandlerStatus
 
 
 class CallbackCancel(Handler):
-    def can_handle(self, update: dict) -> bool:
+    def can_handle(self, update: dict, user_state: dict = None) -> bool:
         return is_callback_query(update) and update['callback_query']['data'] == CALLBACK_CANCEL
 
-    def handle(self, update: dict) -> HandlerStatus:
+    def handle(self, update: dict, user_state: dict = None) -> HandlerStatus:
         bot.telegram_api_client.answer_callback_query(update['callback_query']['id'])
         bot.telegram_api_client.delete_message(
             update['callback_query']['message']['chat']['id'],
