@@ -1,6 +1,5 @@
 import time
 
-import bot.database_client
 import bot.telegram_api_client
 from bot.dispatcher import Dispatcher
 
