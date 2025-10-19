@@ -1,9 +1,9 @@
 import json
 
 import bot.telegram_api_client
-from bot.constants import BUTTON_INLINE
+from bot.database_client import update_user_state
 from bot.filters import is_message_with_text
-from bot.handler import Handler
+from bot.handlers.handler import Handler
 from bot.handler_result import HandlerStatus
 
 
@@ -12,22 +12,31 @@ class MessageStart(Handler):
         return is_message_with_text(update) and update['message']['text'] == '/start'
 
     def handle(self, update: dict, user_state: dict = None) -> HandlerStatus:
+        telegram_id = update["message"]["from"]["id"]
+
+        # Update user state to wait for pizza selection
+        update_user_state(telegram_id, "WAIT_FOR_PIZZA_NAME")
+
+        # Send pizza selection message with inline keyboard
         bot.telegram_api_client.send_message(
             chat_id=update["message"]["chat"]["id"],
-            text="Welcome 👋",
+            text="Please choose pizza type",
             reply_markup=json.dumps(
                 {
-                    'keyboard': [
+                    'inline_keyboard': [
                         [
-                            {"text": BUTTON_INLINE},
-                            {"text": "Top-Right"},
+                            {"text": "Margherita", "callback_data": "pizza_margherita"},
+                            {"text": "Pepperoni", "callback_data": "pizza_pepperoni"},
                         ],
                         [
-                            {"text": "Top-Left"},
-                            {"text": "Bottom-Left"},
+                            {"text": "Quattro Stagioni", "callback_data": "pizza_quattro_stagioni"},
+                            {"text": "Capricciosa", "callback_data": "pizza_capricciosa"},
+                        ],
+                        [
+                            {"text": "Diavola", "callback_data": "pizza_diavola"},
+                            {"text": "Prosciutto", "callback_data": "pizza_prosciutto"},
                         ],
                     ],
-                    'resize_keyboard': True
                 },
             ),
         )

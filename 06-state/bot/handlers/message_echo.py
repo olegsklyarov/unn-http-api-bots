@@ -1,6 +1,6 @@
 import bot.telegram_api_client
 from bot.filters import is_message_with_text
-from bot.handler import Handler
+from bot.handlers.handler import Handler
 from bot.handler_result import HandlerStatus
 
 

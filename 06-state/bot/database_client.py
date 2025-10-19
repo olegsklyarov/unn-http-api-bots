@@ -77,3 +77,23 @@ def get_user(telegram_id: int) -> dict:
                     'data': result[4]
                 }
             return None
+
+
+def update_user_state(telegram_id: int, state: str) -> None:
+    """Update user state in the users table."""
+    with sqlite3.connect(os.getenv("SQLITE_DATABASE_PATH")) as connection:
+        with connection:
+            connection.execute(
+                "UPDATE users SET state = ? WHERE telegram_id = ?",
+                (state, telegram_id)
+            )
+
+
+def update_user_data(telegram_id: int, data: str) -> None:
+    """Update user data in the users table."""
+    with sqlite3.connect(os.getenv("SQLITE_DATABASE_PATH")) as connection:
+        with connection:
+            connection.execute(
+                "UPDATE users SET data = ? WHERE telegram_id = ?",
+                (data, telegram_id)
+            )

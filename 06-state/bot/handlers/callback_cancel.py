@@ -1,7 +1,7 @@
 import bot.telegram_api_client
 from bot.constants import CALLBACK_CANCEL
 from bot.filters import is_callback_query
-from bot.handler import Handler
+from bot.handlers.handler import Handler
 from bot.handler_result import HandlerStatus
 
 
