@@ -60,6 +60,12 @@ class PizzaSizeHandler(Handler):
         # Answer the callback query
         bot.telegram_api_client.answer_callback_query(update['callback_query']['id'])
 
+        # Delete the previous message with pizza size selection
+        bot.telegram_api_client.delete_message(
+            chat_id=update["callback_query"]["message"]["chat"]["id"],
+            message_id=update["callback_query"]["message"]["message_id"]
+        )
+
         # Send drinks selection message
         bot.telegram_api_client.send_message(
             chat_id=update["callback_query"]["message"]["chat"]["id"],
