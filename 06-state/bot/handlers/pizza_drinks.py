@@ -8,7 +8,7 @@ from bot.handler_result import HandlerStatus
 
 
 class PizzaDrinksHandler(Handler):
-    def can_handle(self, update: dict, user_state: dict = None) -> bool:
+    def can_handle(self, update: dict, state: dict) -> bool:
         # Check if it's a callback query and user is waiting for drinks
         if not is_callback_query(update):
             return False
@@ -21,7 +21,7 @@ class PizzaDrinksHandler(Handler):
         callback_data = update['callback_query']['data']
         return callback_data.startswith('drink_')
 
-    def handle(self, update: dict, user_state: dict = None) -> HandlerStatus:
+    def handle(self, update: dict, state: dict) -> HandlerStatus:
         telegram_id = update["callback_query"]["from"]["id"]
         callback_data = update["callback_query"]["data"]
 

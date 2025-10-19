@@ -9,9 +9,9 @@ class UpdateDatabaseLogger(Handler):
     Должен быть добавлен первым обработчиком
     """
 
-    def can_handle(self, update: dict, user_state: dict = None) -> bool:
+    def can_handle(self, update: dict, state: dict) -> bool:
         return True
 
-    def handle(self, update: dict, user_state: dict = None) -> HandlerStatus:
+    def handle(self, update: dict, state: dict) -> HandlerStatus:
         bot.database_client.persist_update(update)
         return HandlerStatus.CONTINUE

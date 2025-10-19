@@ -8,10 +8,10 @@ from bot.handler_result import HandlerStatus
 
 
 class MessageStart(Handler):
-    def can_handle(self, update: dict, user_state: dict = None) -> bool:
+    def can_handle(self, update: dict, state: dict) -> bool:
         return is_message_with_text(update) and update['message']['text'] == '/start'
 
-    def handle(self, update: dict, user_state: dict = None) -> HandlerStatus:
+    def handle(self, update: dict, state: dict) -> HandlerStatus:
         telegram_id = update["message"]["from"]["id"]
 
         # Clear any existing user state and data
