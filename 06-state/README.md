@@ -14,6 +14,10 @@ State-based filtering — хэндлеры запускаются только �
 
 <Реализация>
 
+```bash
+watch 'sqlite3 unn_sklyarov_bot.sqlite -cmd ".mode box" "SELECT * FROM users"'
+```
+
 # 🍕 Pizza Shop Telegram Bot
 ## Phase 1: Database Schema & User State (15 minutes)
 
