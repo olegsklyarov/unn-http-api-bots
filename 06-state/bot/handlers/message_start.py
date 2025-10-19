@@ -1,7 +1,7 @@
 import json
 
 import bot.telegram_api_client
-from bot.database_client import update_user_state
+from bot.database_client import clear_user_data, update_user_state
 from bot.filters import is_message_with_text
 from bot.handlers.handler import Handler
 from bot.handler_result import HandlerStatus
@@ -14,8 +14,18 @@ class MessageStart(Handler):
     def handle(self, update: dict, user_state: dict = None) -> HandlerStatus:
         telegram_id = update["message"]["from"]["id"]
 
+        # Clear any existing user state and data
+        clear_user_data(telegram_id)
+
         # Update user state to wait for pizza selection
         update_user_state(telegram_id, "WAIT_FOR_PIZZA_NAME")
+
+        # Clear any existing keyboard first
+        bot.telegram_api_client.send_message(
+            chat_id=update["message"]["chat"]["id"],
+            text="🍕 Welcome to Pizza shop!",
+            reply_markup=json.dumps({"remove_keyboard": True}),
+        )
 
         # Send pizza selection message with inline keyboard
         bot.telegram_api_client.send_message(

@@ -29,7 +29,7 @@ class PizzaSelectionHandler(Handler):
         pizza_name = callback_data.replace('pizza_', '').replace('_', ' ').title()
 
         # Save pizza name in user data
-        update_user_data(telegram_id, pizza_name)
+        update_user_data(telegram_id, {"pizza_name": pizza_name})
 
         # Update user state to wait for pizza size
         update_user_state(telegram_id, "WAIT_FOR_PIZZA_SIZE")

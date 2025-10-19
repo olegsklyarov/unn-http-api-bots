@@ -89,11 +89,21 @@ def update_user_state(telegram_id: int, state: str) -> None:
             )
 
 
-def update_user_data(telegram_id: int, data: str) -> None:
-    """Update user data in the users table."""
+def update_user_data(telegram_id: int, data: dict) -> None:
+    """Update user data with a JSON object in the users table."""
     with sqlite3.connect(os.getenv("SQLITE_DATABASE_PATH")) as connection:
         with connection:
             connection.execute(
                 "UPDATE users SET data = ? WHERE telegram_id = ?",
-                (data, telegram_id)
+                (json.dumps(data, ensure_ascii=False, indent=2), telegram_id)
+            )
+
+
+def clear_user_data(telegram_id: int) -> None:
+    """Clear user state and data in the users table."""
+    with sqlite3.connect(os.getenv("SQLITE_DATABASE_PATH")) as connection:
+        with connection:
+            connection.execute(
+                "UPDATE users SET state = NULL, data = NULL WHERE telegram_id = ?",
+                (telegram_id,)
             )
