@@ -7,3 +7,4 @@ uploaded_files/
 .env
 .venv
 __pycache__
+.cursor
