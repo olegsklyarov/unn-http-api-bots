@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Telegram Bot API</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css" />
+  <style>
+    :root {
+      --background: #fafafa;
+      --foreground: #18181b;
+      --card: #ffffff;
+      --muted: #f4f4f5;
+      --muted-foreground: #71717a;
+      --border: #e4e4e7;
+      --primary: #18181b;
+      --primary-foreground: #fafafa;
+      --ring: #a1a1aa;
+      --danger: #dc2626;
+      --radius: 0.5rem;
+      --font: "Plus Jakarta Sans", ui-sans-serif, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--foreground);
+      background: var(--background);
+    }
+
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 4rem;
+    }
+
+    header {
+      margin-bottom: 1.75rem;
+    }
+
+    h1 {
+      margin: 0 0 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted-foreground);
+      font-size: 0.875rem;
+    }
+
+    .warning {
+      margin: 1rem 0 0;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--muted);
+      color: var(--muted-foreground);
+      font-size: 0.8125rem;
+    }
+
+    .token-bar {
+      margin-bottom: 1.5rem;
+      padding: 1.25rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+    }
+
+    .token-bar label {
+      display: block;
+      margin-bottom: 0.375rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 560px) {
+      .field-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+
+    .hint {
+      color: var(--muted-foreground);
+      font-size: 0.75rem;
+      font-weight: 400;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font: inherit;
+      color: var(--foreground);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--ring);
+      box-shadow: 0 0 0 3px rgb(161 161 170 / 0.25);
+    }
+
+    textarea {
+      min-height: 4.5rem;
+      resize: vertical;
+    }
+
+    .methods {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card {
+      padding: 1.25rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .docs {
+      color: var(--muted-foreground);
+      font-size: 0.8125rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .docs:hover {
+      color: var(--foreground);
+      text-decoration: underline;
+    }
+
+    .params {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .params.empty {
+      margin-bottom: 0.75rem;
+      color: var(--muted-foreground);
+      font-size: 0.8125rem;
+    }
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 2.25rem;
+      padding: 0 1rem;
+      font: inherit;
+      font-weight: 500;
+      color: var(--primary-foreground);
+      background: var(--primary);
+      border: none;
+      border-radius: calc(var(--radius) - 2px);
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    button:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .response {
+      display: none;
+      margin: 1rem 0 0;
+      padding: 0.875rem 1rem;
+      overflow: auto;
+      max-height: 22rem;
+      background: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 2px);
+    }
+
+    .response.is-visible {
+      display: block;
+    }
+
+    .response code {
+      display: block;
+      padding: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.75rem;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--foreground);
+      background: transparent;
+      text-shadow: none;
+    }
+
+    .response.error code {
+      color: var(--danger);
+    }
+
+    .response code .token {
+      background: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>Telegram Bot API</h1>
+      <p class="subtitle">Interactive playground for getMe, sendMessage, and getUpdates.</p>
+      <p class="warning">
+        Your bot token is sent only to <code>api.telegram.org</code> from this page.
+        It is visible in browser DevTools — use a practice bot token, not a production one.
+      </p>
+    </header>
+
+    <div class="token-bar">
+      <label for="token">Bot token</label>
+      <input
+        id="token"
+        type="password"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+      />
+    </div>
+
+    <div class="methods">
+      <section class="card" data-method="getMe">
+        <div class="card-header">
+          <h2>getMe</h2>
+          <a class="docs" href="https://core.telegram.org/bots/api#getme" target="_blank" rel="noopener noreferrer">
+            Documentation
+          </a>
+        </div>
+        <p class="params empty">No parameters.</p>
+        <button type="button" data-action="try">Try it out</button>
+        <pre class="response" data-response><code class="language-json"></code></pre>
+      </section>
+
+      <section class="card" data-method="sendMessage">
+        <div class="card-header">
+          <h2>sendMessage</h2>
+          <a class="docs" href="https://core.telegram.org/bots/api#sendmessage" target="_blank" rel="noopener noreferrer">
+            Documentation
+          </a>
+        </div>
+        <div class="params">
+          <div class="field">
+            <label for="chat_id">chat_id</label>
+            <input id="chat_id" type="text" placeholder="57053957" />
+          </div>
+          <div class="field">
+            <label for="text">text</label>
+            <textarea id="text" placeholder="Hello from browser!"></textarea>
+          </div>
+        </div>
+        <button type="button" data-action="try">Try it out</button>
+        <pre class="response" data-response><code class="language-json"></code></pre>
+      </section>
+
+      <section class="card" data-method="getUpdates">
+        <div class="card-header">
+          <h2>getUpdates</h2>
+          <a class="docs" href="https://core.telegram.org/bots/api#getupdates" target="_blank" rel="noopener noreferrer">
+            Documentation
+          </a>
+        </div>
+        <div class="params">
+          <div class="field-row">
+            <div class="field">
+              <label for="offset">offset <span class="hint">optional</span></label>
+              <input id="offset" type="text" inputmode="numeric" placeholder="592752087" />
+            </div>
+            <div class="field">
+              <label for="timeout">timeout</label>
+              <input id="timeout" type="text" inputmode="numeric" value="30" />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="limit">limit <span class="hint">optional</span></label>
+              <input id="limit" type="text" inputmode="numeric" placeholder="100" />
+            </div>
+            <div class="field">
+              <label for="allowed_updates">allowed_updates</label>
+              <input id="allowed_updates" type="text" value='["message"]' />
+            </div>
+          </div>
+        </div>
+        <button type="button" data-action="try">Try it out</button>
+        <pre class="response" data-response><code class="language-json"></code></pre>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script>
+    function getToken() {
+      return document.getElementById("token").value.trim();
+    }
+
+    function parseOptionalNumber(value) {
+      const trimmed = value.trim();
+      if (!trimmed) return undefined;
+      const n = Number(trimmed);
+      if (Number.isNaN(n)) {
+        throw new Error(`Invalid number: ${trimmed}`);
+      }
+      return n;
+    }
+
+    function parseAllowedUpdates(value) {
+      const trimmed = value.trim();
+      if (!trimmed) return undefined;
+      if (trimmed.startsWith("[")) {
+        const parsed = JSON.parse(trimmed);
+        if (!Array.isArray(parsed)) {
+          throw new Error("allowed_updates must be a JSON array");
+        }
+        return parsed;
+      }
+      return trimmed
+        .split(",")
+        .map((part) => part.trim())
+        .filter(Boolean);
+    }
+
+    function buildPayload(method) {
+      if (method === "getMe") {
+        return {};
+      }
+
+      if (method === "sendMessage") {
+        const chatIdRaw = document.getElementById("chat_id").value.trim();
+        const text = document.getElementById("text").value;
+        if (!chatIdRaw) throw new Error("chat_id is required");
+        if (!text) throw new Error("text is required");
+
+        const chatIdNumber = Number(chatIdRaw);
+        return {
+          chat_id: Number.isNaN(chatIdNumber) ? chatIdRaw : chatIdNumber,
+          text,
+        };
+      }
+
+      if (method === "getUpdates") {
+        const payload = {};
+        const offset = parseOptionalNumber(document.getElementById("offset").value);
+        const timeout = parseOptionalNumber(document.getElementById("timeout").value);
+        const limit = parseOptionalNumber(document.getElementById("limit").value);
+        const allowedUpdates = parseAllowedUpdates(
+          document.getElementById("allowed_updates").value
+        );
+
+        if (offset !== undefined) payload.offset = offset;
+        if (timeout !== undefined) payload.timeout = timeout;
+        if (limit !== undefined) payload.limit = limit;
+        if (allowedUpdates !== undefined) payload.allowed_updates = allowedUpdates;
+        return payload;
+      }
+
+      throw new Error(`Unknown method: ${method}`);
+    }
+
+    function setResponse(responseEl, text, { error = false, highlight = false } = {}) {
+      const codeEl = responseEl.querySelector("code");
+      responseEl.classList.toggle("error", error);
+      responseEl.classList.add("is-visible");
+      codeEl.textContent = text;
+      if (highlight && window.Prism) {
+        Prism.highlightElement(codeEl);
+      }
+    }
+
+    async function callMethod(method, button, responseEl) {
+      const token = getToken();
+      if (!token) {
+        setResponse(responseEl, "Enter your bot token first.", { error: true });
+        return;
+      }
+
+      let payload;
+      try {
+        payload = buildPayload(method);
+      } catch (err) {
+        setResponse(responseEl, err.message, { error: true });
+        return;
+      }
+
+      const label = button.textContent;
+      button.disabled = true;
+      button.textContent = "Loading…";
+      responseEl.classList.remove("error", "is-visible");
+      responseEl.querySelector("code").textContent = "";
+
+      try {
+        const res = await fetch(`https://api.telegram.org/bot${token}/${method}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        setResponse(responseEl, JSON.stringify(data, null, 2), {
+          error: !data.ok,
+          highlight: true,
+        });
+      } catch (err) {
+        setResponse(responseEl, err.message || String(err), { error: true });
+      } finally {
+        button.disabled = false;
+        button.textContent = label;
+      }
+    }
+
+    document.querySelectorAll("[data-action='try']").forEach((button) => {
+      button.addEventListener("click", () => {
+        const card = button.closest(".card");
+        const method = card.dataset.method;
+        const responseEl = card.querySelector("[data-response]");
+        callMethod(method, button, responseEl);
+      });
+    });
+  </script>
+</body>
+</html>
