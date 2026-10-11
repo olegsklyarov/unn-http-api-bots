@@ -7,11 +7,16 @@ HUB_IMAGE=olegsklyarov/sklayrov_bot
 build:
 	docker build -t $(IMAGE) .
 
-run:
-	docker run -d --name $(CONTAINER) --env-file .env $(IMAGE)
+run: stop
+	docker run --detach \
+		--name $(CONTAINER) \
+		--env-file .env \
+		--restart unless-stopped \
+		$(IMAGE)
 
 stop:
-	docker stop $(CONTAINER) && docker rm $(CONTAINER)
+	-docker stop $(CONTAINER)
+	-docker rm $(CONTAINER)
 
 push: build
 	docker tag $(IMAGE) $(HUB_IMAGE):latest

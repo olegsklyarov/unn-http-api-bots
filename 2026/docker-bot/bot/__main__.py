@@ -26,18 +26,15 @@ def send_message(**params):
 
 def main():
     next_update_id = 0
-    try:
-        while True:
-            for update in get_updates(offset=next_update_id, timeout=30):
-                next_update_id = max(next_update_id, update["update_id"] + 1)
-                # TODO проверять явно согласно документации какие есть в JSON поля
-                send_message(
-                    chat_id=update["message"]["chat"]["id"],
-                    text=update["message"]["text"],
-                )
-                print(".", end="", flush=True)
-    except KeyboardInterrupt:
-        print("\nBye!")
+    while True:
+        for update in get_updates(offset=next_update_id, timeout=30):
+            next_update_id = max(next_update_id, update["update_id"] + 1)
+            # TODO проверять явно согласно документации какие есть в JSON поля
+            send_message(
+                chat_id=update["message"]["chat"]["id"],
+                text=update["message"]["text"],
+            )
+            print(".", end="", flush=True)
 
 
 if __name__ == "__main__":
