@@ -21,3 +21,6 @@ stop:
 push: build
 	docker tag $(IMAGE) $(HUB_IMAGE):latest
 	docker push $(HUB_IMAGE):latest
+
+logs:
+	docker logs -f $(CONTAINER)
