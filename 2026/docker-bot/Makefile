@@ -1,8 +1,8 @@
 IMAGE=sklyarov_echo_image
 CONTAINER=sklyarov_echo_bot
-GHCR_IMAGE=ghcr.io/olegsklyarov/sklyarov_echo_image
+HUB_IMAGE=olegsklyarov/sklayrov_bot
 
-.PHONY: build run stop publish
+.PHONY: build run stop push
 
 build:
 	docker build -t $(IMAGE) .
@@ -13,6 +13,6 @@ run:
 stop:
 	docker stop $(CONTAINER) && docker rm $(CONTAINER)
 
-publish: build
-	docker tag $(IMAGE) $(GHCR_IMAGE):latest
-	docker push $(GHCR_IMAGE):latest
+push: build
+	docker tag $(IMAGE) $(HUB_IMAGE):latest
+	docker push $(HUB_IMAGE):latest
