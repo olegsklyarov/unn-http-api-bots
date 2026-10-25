@@ -1,0 +1,233 @@
+#!/usr/bin/env bash
+# Switch between lecture demo steps tagged as 2026-fall-07-step-NN.
+set -euo pipefail
+
+PREFIX="2026-fall-07-step-"
+
+usage() {
+  cat >&2 <<'EOF'
+Usage:
+  ./demo              Show current step and list
+  ./demo status       Same as above
+  ./demo next         Go to next step
+  ./demo prev         Go to previous step
+  ./demo N            Go to step N (e.g. 3 or 03)
+  ./demo add [msg]    Tag HEAD as the next step
+  ./demo help         Show this help
+EOF
+}
+
+die() {
+  echo "error: $*" >&2
+  exit 1
+}
+
+require_git_repo() {
+  git rev-parse --show-toplevel >/dev/null 2>&1 || die "not inside a git repository"
+}
+
+# Sorted list of step tags (one per line).
+list_steps() {
+  git tag -l "${PREFIX}*" | sort -V
+}
+
+tag_for_num() {
+  local n
+  n=$(printf '%02d' "$1")
+  echo "${PREFIX}${n}"
+}
+
+num_from_tag() {
+  local tag=$1
+  echo "${tag#"$PREFIX"}" | sed 's/^0*//' | awk '{print ($0 == "" ? 0 : $0)}'
+}
+
+# Tag on HEAD that matches PREFIX, or empty.
+current_step_tag() {
+  local t
+  while IFS= read -r t; do
+    [[ -z "$t" ]] && continue
+    if [[ $(git rev-parse "$t^{commit}") == $(git rev-parse HEAD) ]]; then
+      echo "$t"
+      return 0
+    fi
+  done < <(list_steps)
+  return 1
+}
+
+ensure_clean() {
+  if [[ -n $(git status --porcelain) ]]; then
+    die "working tree is dirty; commit or stash changes first"
+  fi
+}
+
+checkout_tag() {
+  local tag=$1
+  git rev-parse "$tag" >/dev/null 2>&1 || die "unknown step tag: $tag"
+  ensure_clean
+  git checkout --detach "$tag"
+  local subject
+  subject=$(git tag -l --format='%(contents:subject)' "$tag")
+  echo "→ $tag"
+  [[ -n "$subject" ]] && echo "  $subject"
+}
+
+cmd_status() {
+  local steps current
+  steps=$(list_steps)
+  if [[ -z "$steps" ]]; then
+    echo "No steps yet (no tags matching ${PREFIX}*)."
+    echo "Create the first with: ./demo add \"description\""
+    return 0
+  fi
+
+  echo "Steps:"
+  current=""
+  if current=$(current_step_tag); then
+    :
+  else
+    current=""
+  fi
+
+  local t n marker
+  while IFS= read -r t; do
+    [[ -z "$t" ]] && continue
+    n=$(num_from_tag "$t")
+    marker="  "
+    [[ "$t" == "$current" ]] && marker="→ "
+    printf '%s%2d  %s' "$marker" "$n" "$t"
+    local subject
+    subject=$(git tag -l --format='%(contents:subject)' "$t")
+    [[ -n "$subject" ]] && printf '  — %s' "$subject"
+    printf '\n'
+  done <<< "$steps"
+
+  if [[ -z "$current" ]]; then
+    echo
+    echo "HEAD is not on a step tag ($(git rev-parse --short HEAD))."
+  fi
+}
+
+cmd_goto_num() {
+  local raw=$1
+  [[ "$raw" =~ ^[0-9]+$ ]] || die "invalid step number: $raw"
+  # strip leading zeros for arithmetic, keep zero as 0
+  local n=$((10#$raw))
+  (( n >= 1 )) || die "step number must be >= 1"
+  local tag
+  tag=$(tag_for_num "$n")
+  checkout_tag "$tag"
+}
+
+cmd_next() {
+  local steps current next_tag found=0
+  steps=$(list_steps)
+  [[ -n "$steps" ]] || die "no steps tagged yet"
+
+  if ! current=$(current_step_tag); then
+    die "HEAD is not on a step tag; use ./demo N or ./demo status"
+  fi
+
+  while IFS= read -r t; do
+    [[ -z "$t" ]] && continue
+    if (( found )); then
+      next_tag=$t
+      break
+    fi
+    [[ "$t" == "$current" ]] && found=1
+  done <<< "$steps"
+
+  [[ -n "${next_tag:-}" ]] || die "already at last step ($current)"
+  checkout_tag "$next_tag"
+}
+
+cmd_prev() {
+  local steps current prev_tag=""
+  steps=$(list_steps)
+  [[ -n "$steps" ]] || die "no steps tagged yet"
+
+  if ! current=$(current_step_tag); then
+    die "HEAD is not on a step tag; use ./demo N or ./demo status"
+  fi
+
+  while IFS= read -r t; do
+    [[ -z "$t" ]] && continue
+    [[ "$t" == "$current" ]] && break
+    prev_tag=$t
+  done <<< "$steps"
+
+  [[ -n "$prev_tag" ]] || die "already at first step ($current)"
+  checkout_tag "$prev_tag"
+}
+
+cmd_add() {
+  local message=${1:-}
+  ensure_clean
+
+  local steps last_n=0 next_n tag
+  steps=$(list_steps)
+  if [[ -n "$steps" ]]; then
+    local t
+    while IFS= read -r t; do
+      [[ -z "$t" ]] && continue
+      last_n=$(num_from_tag "$t")
+    done <<< "$steps"
+  fi
+  next_n=$((last_n + 1))
+  tag=$(tag_for_num "$next_n")
+
+  if git rev-parse "$tag" >/dev/null 2>&1; then
+    die "tag already exists: $tag"
+  fi
+
+  local existing
+  if existing=$(current_step_tag); then
+    die "HEAD is already tagged as $existing"
+  fi
+
+  if [[ -z "$message" ]]; then
+    message="step $(printf '%02d' "$next_n")"
+  fi
+
+  git tag -a "$tag" -m "$message"
+  echo "created $tag"
+  echo "  $message"
+  echo "  at $(git rev-parse --short HEAD)"
+}
+
+main() {
+  require_git_repo
+  local cmd=${1:-status}
+
+  case "$cmd" in
+    help|-h|--help)
+      usage
+      ;;
+    status)
+      cmd_status
+      ;;
+    next)
+      cmd_next
+      ;;
+    prev)
+      cmd_prev
+      ;;
+    add)
+      shift || true
+      cmd_add "${1:-}"
+      ;;
+    '' )
+      cmd_status
+      ;;
+    *)
+      if [[ "$cmd" =~ ^[0-9]+$ ]]; then
+        cmd_goto_num "$cmd"
+      else
+        usage
+        die "unknown command: $cmd"
+      fi
+      ;;
+  esac
+}
+
+main "$@"
