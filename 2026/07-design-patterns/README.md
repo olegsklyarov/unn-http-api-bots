@@ -15,6 +15,7 @@
 | 7 | `2026-fall-07-step-08` | Telegram Bot API клиент вынесен в `bot/telegram_bot_api.py` |
 | 8 | `2026-fall-07-step-09` | Persist updates вынесен в `bot/updated_logger.py` |
 | 9 | `2026-fall-07-step-10` | Users storage вынесен в `bot/users_storage.py` |
+| 10 | `2026-fall-07-step-11` | Dispatcher / Handler вместо spaghetti в `__main__` |
 
 ## Шаг 0 — echo-бот
 
@@ -72,6 +73,13 @@ HTTP-клиент Telegram Bot API (`api_request`, `get_updates`, `send_message`
 
 Работа с `data/users.json` (`persist_user`, `user_from_update`, формат файла) вынесена в [`bot/users_storage.py`](bot/users_storage.py).
 В `__main__.py`: `users_storage.persist_user(update)`. Хранение пользователей отделено от цикла обработки updates.
+
+## Шаг 10 — Dispatcher / Handler
+
+Spaghetti-цикл в `__main__` заменён на паттерн Dispatcher / Handler (как на лекции про dispatcher).
+Инфра: `handler.py` (`Handler` + `HandlerStatus` CONTINUE/STOP), `dispatcher.py`, `long_polling.py`.
+Каждый обработчик — отдельный файл в `bot/handlers/`: persist update/user (`CONTINUE`), callback raw/hide и echo text/sticker/video_note (`STOP`).
+`__main__` только собирает `Dispatcher`, регистрирует `get_handlers()` и запускает long polling. Порядок handlers важен: сначала side-effects на диск, потом узкие callback/echo.
 
 ## Переключение шагов
 
