@@ -41,10 +41,12 @@ def main():
             for update in get_updates(offset=next_update_id, timeout=30):
                 next_update_id = max(next_update_id, update["update_id"] + 1)
                 persist_update(update)
-                # TODO проверять явно согласно документации какие есть в JSON поля
+                message = update.get("message")
+                if message is None or "text" not in message:
+                    continue
                 send_message(
-                    chat_id=update["message"]["chat"]["id"],
-                    text=update["message"]["text"],
+                    chat_id=message["chat"]["id"],
+                    text=message["text"],
                 )
                 print(".", end="", flush=True)
     except KeyboardInterrupt:
