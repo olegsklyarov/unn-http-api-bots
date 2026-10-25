@@ -28,6 +28,10 @@ def send_sticker(**params):
     return api_request("sendSticker", **params)
 
 
+def send_video_note(**params):
+    return api_request("sendVideoNote", **params)
+
+
 def persist_update(update):
     updates_dir = Path("data/updates")
     updates_dir.mkdir(parents=True, exist_ok=True)
@@ -55,6 +59,11 @@ def main():
                     send_sticker(
                         chat_id=chat_id,
                         sticker=message["sticker"]["file_id"],
+                    )
+                elif "video_note" in message:
+                    send_video_note(
+                        chat_id=chat_id,
+                        video_note=message["video_note"]["file_id"],
                     )
                 else:
                     continue

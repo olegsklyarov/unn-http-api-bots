@@ -9,6 +9,7 @@
 | 1 | `2026-fall-07-step-02` | История всех входящих updates на диске — изучать структуру, обучение и дебаг |
 | 2 | `2026-fall-07-step-03` | Ответ только на text; остальное игнорируем без падения |
 | 3 | `2026-fall-07-step-04` | Echo стикера через новый метод API `sendSticker` |
+| 4 | `2026-fall-07-step-05` | Echo кружка (video note) через `sendVideoNote` |
 
 ## Шаг 0 — echo-бот
 
@@ -30,6 +31,13 @@
 Добавляем ещё один метод Telegram Bot API — [`sendSticker`](https://core.telegram.org/bots/api#sendsticker) (хелпер `send_sticker` рядом с уже существующим `sendMessage`).
 В параметр `sticker` передаём тот же `file_id` из входящего сообщения — файл качать не нужно.
 Text по-прежнему echo через `sendMessage`; всё остальное игнорируем без падения; `data/updates` пишется всегда.
+
+## Шаг 4 — echo video note
+
+У входящего `Message` может быть поле `video_note` (см. JSON в `data/updates`) с `file_id`.
+Добавляем ещё один метод Telegram Bot API — [`sendVideoNote`](https://core.telegram.org/bots/api#sendvideonote) (хелпер `send_video_note`).
+В параметр `video_note` передаём тот же `file_id` из входящего сообщения — файл качать не нужно.
+Text и sticker по-прежнему echo; всё остальное игнорируем без падения; `data/updates` пишется всегда.
 
 ## Переключение шагов
 
