@@ -2,7 +2,7 @@ import json
 import time
 from pathlib import Path
 
-from bot import telegram_bot_api
+from bot import telegram_bot_api, updated_logger
 
 USERS_PATH = Path("data/users.json")
 
@@ -49,16 +49,6 @@ _USER_KEYS = (
     "poll_answer",
     "business_connection",
 )
-
-
-def persist_update(update):
-    updates_dir = Path("data/updates")
-    updates_dir.mkdir(parents=True, exist_ok=True)
-    path = updates_dir / f"{update['update_id']}.json"
-    path.write_text(
-        json.dumps(update, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
 
 
 def user_from_update(update):
@@ -122,7 +112,7 @@ def main():
                 allowed_updates=json.dumps(["message", "callback_query"]),
             ):
                 next_update_id = max(next_update_id, update["update_id"] + 1)
-                persist_update(update)
+                updated_logger.persist_update(update)
                 persist_user(update)
                 if "callback_query" in update:
                     cq = update["callback_query"]

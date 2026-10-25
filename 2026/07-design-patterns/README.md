@@ -13,6 +13,7 @@
 | 5 | `2026-fall-07-step-06` | Актуальное состояние пользователей в `data/users.json` |
 | 6 | `2026-fall-07-step-07` | Inline-кнопки под echo: сырой JSON и скрыть клавиатуру |
 | 7 | `2026-fall-07-step-08` | Telegram Bot API клиент вынесен в `bot/telegram_bot_api.py` |
+| 8 | `2026-fall-07-step-09` | Persist updates вынесен в `bot/updated_logger.py` |
 
 ## Шаг 0 — echo-бот
 
@@ -60,6 +61,11 @@ Text и sticker по-прежнему echo; всё остальное игнор
 
 HTTP-клиент Telegram Bot API (`api_request`, `get_updates`, `send_message`, …) вынесен из `__main__.py` в отдельный модуль [`bot/telegram_bot_api.py`](bot/telegram_bot_api.py).
 В `__main__.py` вызовы через полное имя модуля (`telegram_bot_api.send_message(...)`), чтобы было видно, откуда метод. Транспорт и токен — в одном месте. Первый шаг к разделению ответственности (дальше — design patterns).
+
+## Шаг 8 — модуль `bot/updated_logger.py`
+
+Запись входящих updates на диск (`persist_update` → `data/updates/<update_id>.json`) вынесена в [`bot/updated_logger.py`](bot/updated_logger.py).
+В `__main__.py`: `updated_logger.persist_update(update)`. Логика бота и «логгер» updates разделены по модулям.
 
 ## Переключение шагов
 
