@@ -12,6 +12,7 @@
 | 4 | `2026-fall-07-step-05` | Echo кружка (video note) через `sendVideoNote` |
 | 5 | `2026-fall-07-step-06` | Актуальное состояние пользователей в `data/users.json` |
 | 6 | `2026-fall-07-step-07` | Inline-кнопки под echo: сырой JSON и скрыть клавиатуру |
+| 7 | `2026-fall-07-step-08` | Telegram Bot API клиент вынесен в `bot/telegram_bot_api.py` |
 
 ## Шаг 0 — echo-бот
 
@@ -54,6 +55,11 @@ Text и sticker по-прежнему echo; всё остальное игнор
 Сразу после `callback_query` вызываем [`answerCallbackQuery`](https://core.telegram.org/bots/api#answercallbackquery) — иначе у кнопки бесконечно крутятся «часики».
 «Сырой JSON»: берём `callback_query.message.reply_to_message` **из update** (не из `data/updates/`) и шлём обычным `sendMessage` **без** `reply_to_message_id`, Markdown code fence (`parse_mode=Markdown`).
 «Скрыть»: [`editMessageReplyMarkup`](https://core.telegram.org/bots/api#editmessagereplymarkup) с пустым `inline_keyboard` — клавиатура пропадает.
+
+## Шаг 7 — модуль `bot/telegram_bot_api.py`
+
+HTTP-клиент Telegram Bot API (`api_request`, `get_updates`, `send_message`, …) вынесен из `__main__.py` в отдельный модуль [`bot/telegram_bot_api.py`](bot/telegram_bot_api.py).
+В `__main__.py` вызовы через полное имя модуля (`telegram_bot_api.send_message(...)`), чтобы было видно, откуда метод. Транспорт и токен — в одном месте. Первый шаг к разделению ответственности (дальше — design patterns).
 
 ## Переключение шагов
 
