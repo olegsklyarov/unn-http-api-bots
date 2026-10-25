@@ -24,6 +24,10 @@ def send_message(**params):
     return api_request("sendMessage", **params)
 
 
+def send_sticker(**params):
+    return api_request("sendSticker", **params)
+
+
 def persist_update(update):
     updates_dir = Path("data/updates")
     updates_dir.mkdir(parents=True, exist_ok=True)
@@ -42,12 +46,18 @@ def main():
                 next_update_id = max(next_update_id, update["update_id"] + 1)
                 persist_update(update)
                 message = update.get("message")
-                if message is None or "text" not in message:
+                if message is None:
                     continue
-                send_message(
-                    chat_id=message["chat"]["id"],
-                    text=message["text"],
-                )
+                chat_id = message["chat"]["id"]
+                if "text" in message:
+                    send_message(chat_id=chat_id, text=message["text"])
+                elif "sticker" in message:
+                    send_sticker(
+                        chat_id=chat_id,
+                        sticker=message["sticker"]["file_id"],
+                    )
+                else:
+                    continue
                 print(".", end="", flush=True)
     except KeyboardInterrupt:
         print("\nBye!")
