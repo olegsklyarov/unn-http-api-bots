@@ -77,9 +77,34 @@ HTTP-клиент Telegram Bot API (`api_request`, `get_updates`, `send_message`
 ## Шаг 10 — Dispatcher / Handler
 
 Spaghetti-цикл в `__main__` заменён на паттерн Dispatcher / Handler (как на лекции про dispatcher).
+Опора на [цепочку обязанностей](https://refactoring.guru/ru/design-patterns/chain-of-responsibility) и абстрактные классы Python ([`abc`](https://docs.python.org/3/library/abc.html)).
 Инфра: `handler.py` (`Handler` + `HandlerStatus` CONTINUE/STOP), `dispatcher.py`, `long_polling.py`.
 Каждый обработчик — отдельный файл в `bot/handlers/`: persist update/user (`CONTINUE`), callback raw/hide и echo text/sticker/video_note (`STOP`).
 `__main__` только собирает `Dispatcher`, регистрирует `get_handlers()` и запускает long polling. Порядок handlers важен: сначала side-effects на диск, потом узкие callback/echo.
+Диаграммы для доски и слайда: [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Материалы
+
+**Telegram Bot API (шаги 0–6)**
+
+- [Telegram Bot API](https://core.telegram.org/bots/api) — Update, Message, User, методы
+- [Getting updates](https://core.telegram.org/bots/api#getting-updates) — long polling / `getUpdates`
+
+**Паттерны и принципы (шаги 7–10)**
+
+- [Цепочка обязанностей](https://refactoring.guru/ru/design-patterns/chain-of-responsibility) — Dispatcher обходит handlers
+- [Strategy](https://refactoring.guru/ru/design-patterns/strategy) — конкретный Handler как стратегия обработки update
+- [Каталог паттернов](https://refactoring.guru/ru/design-patterns/catalog) — обзор, куда смотреть дальше
+- [Open–closed principle](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle) — новый handler без правки Dispatcher
+- [ARCHITECTURE.md](ARCHITECTURE.md) — sequence и UML шага Dispatcher / Handler
+
+**Python**
+
+- [`abc`](https://docs.python.org/3/library/abc.html) — абстрактный `Handler`
+- [Modules](https://docs.python.org/3/tutorial/modules.html) — вынос `telegram_bot_api` / `updated_logger` / `users_storage`
+- [json](https://docs.python.org/3/library/json.html) — persist updates / users / reply_markup
+- [enum](https://docs.python.org/3/library/enum.html) — `HandlerStatus`
+- [urllib.request](https://docs.python.org/3/library/urllib.request.html) — HTTP-клиент бота
 
 ## Переключение шагов
 
