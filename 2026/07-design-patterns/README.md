@@ -11,6 +11,7 @@
 | 3 | `2026-fall-07-step-04` | Echo стикера через новый метод API `sendSticker` |
 | 4 | `2026-fall-07-step-05` | Echo кружка (video note) через `sendVideoNote` |
 | 5 | `2026-fall-07-step-06` | Актуальное состояние пользователей в `data/users.json` |
+| 6 | `2026-fall-07-step-07` | Inline-кнопки под echo: сырой JSON и скрыть клавиатуру |
 
 ## Шаг 0 — echo-бот
 
@@ -45,6 +46,14 @@ Text и sticker по-прежнему echo; всё остальное игнор
 На каждый [Update](https://core.telegram.org/bots/api#update) вызываем `persist_user`: из payload по типу update достаём [User](https://core.telegram.org/bots/api#user) (`from` у message/callback_query/… или `user` у poll_answer/business_connection). Если пользователя нет — молча выходим.
 Файл `data/users.json` — один JSON-объект: ключ = telegram user id, значение = поля User плюс unix-timestamps `created_at` / `updated_at`. Новый пользователь добавляется; существующий перезаписывается данными из update (они считаются актуальнее), `created_at` сохраняется, `updated_at` всегда обновляется.
 Формат: `ensure_ascii=False`, без `indent=2`, ключи отсортированы, одна строка — один пользователь. Пишется для любого update (до веток echo).
+
+## Шаг 6 — inline-кнопки
+
+Под каждым echo (text / sticker / video_note) две [inline-кнопки](https://core.telegram.org/bots/api#inlinekeyboardbutton): «Сырой JSON» и «Скрыть». Echo уходит с `reply_to_message_id`, чтобы в callback было исходное сообщение пользователя.
+В `getUpdates` явно передаём `allowed_updates=["message","callback_query"]` — иначе Telegram может оставить прошлый фильтр только на `message`, и клики по кнопкам не доходят.
+Сразу после `callback_query` вызываем [`answerCallbackQuery`](https://core.telegram.org/bots/api#answercallbackquery) — иначе у кнопки бесконечно крутятся «часики».
+«Сырой JSON»: берём `callback_query.message.reply_to_message` **из update** (не из `data/updates/`) и шлём обычным `sendMessage` **без** `reply_to_message_id`, Markdown code fence (`parse_mode=Markdown`).
+«Скрыть»: [`editMessageReplyMarkup`](https://core.telegram.org/bots/api#editmessagereplymarkup) с пустым `inline_keyboard` — клавиатура пропадает.
 
 ## Переключение шагов
 
