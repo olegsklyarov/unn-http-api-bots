@@ -10,6 +10,7 @@
 | 2 | `2026-fall-07-step-03` | Ответ только на text; остальное игнорируем без падения |
 | 3 | `2026-fall-07-step-04` | Echo стикера через новый метод API `sendSticker` |
 | 4 | `2026-fall-07-step-05` | Echo кружка (video note) через `sendVideoNote` |
+| 5 | `2026-fall-07-step-06` | Актуальное состояние пользователей в `data/users.json` |
 
 ## Шаг 0 — echo-бот
 
@@ -38,6 +39,12 @@ Text по-прежнему echo через `sendMessage`; всё остальн�
 Добавляем ещё один метод Telegram Bot API — [`sendVideoNote`](https://core.telegram.org/bots/api#sendvideonote) (хелпер `send_video_note`).
 В параметр `video_note` передаём тот же `file_id` из входящего сообщения — файл качать не нужно.
 Text и sticker по-прежнему echo; всё остальное игнорируем без падения; `data/updates` пишется всегда.
+
+## Шаг 5 — `data/users.json`
+
+На каждый [Update](https://core.telegram.org/bots/api#update) вызываем `persist_user`: из payload по типу update достаём [User](https://core.telegram.org/bots/api#user) (`from` у message/callback_query/… или `user` у poll_answer/business_connection). Если пользователя нет — молча выходим.
+Файл `data/users.json` — один JSON-объект: ключ = telegram user id, значение = поля User плюс unix-timestamps `created_at` / `updated_at`. Новый пользователь добавляется; существующий перезаписывается данными из update (они считаются актуальнее), `created_at` сохраняется, `updated_at` всегда обновляется.
+Формат: `ensure_ascii=False`, без `indent=2`, ключи отсортированы, одна строка — один пользователь. Пишется для любого update (до веток echo).
 
 ## Переключение шагов
 
