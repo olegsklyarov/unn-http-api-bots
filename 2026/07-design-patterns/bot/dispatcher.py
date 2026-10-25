@@ -1,3 +1,12 @@
+"""Диспетчер: обход цепочки handlers для одного Update.
+
+Паттерн Chain of Responsibility (цепочка обязанностей):
+https://refactoring.guru/ru/design-patterns/chain-of-responsibility
+
+Алгоритм: can_handle → handle → при STOP — break.
+Sequence и UML: ../ARCHITECTURE.md
+"""
+
 from bot.handler import Handler
 from bot.handler import HandlerStatus
 

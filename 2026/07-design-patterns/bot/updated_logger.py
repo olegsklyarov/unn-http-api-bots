@@ -1,3 +1,11 @@
+"""Локальный лог входящих Update на диск (data/updates/).
+
+Отделён от цикла/handlers — separation of concerns через модуль.
+https://docs.python.org/3/tutorial/modules.html
+https://docs.python.org/3/library/json.html
+Update: https://core.telegram.org/bots/api#update
+"""
+
 import json
 from pathlib import Path
 

@@ -1,3 +1,9 @@
+"""Кнопка «Скрыть»: снять inline-клавиатуру с сообщения бота.
+
+answerCallbackQuery сразу; затем editMessageReplyMarkup с пустым keyboard.
+https://core.telegram.org/bots/api#editmessagereplymarkup
+"""
+
 import json
 
 from bot import telegram_bot_api

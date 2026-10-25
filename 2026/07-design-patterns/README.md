@@ -97,6 +97,7 @@ Spaghetti-цикл в `__main__` заменён на паттерн Dispatcher /
 - [Каталог паттернов](https://refactoring.guru/ru/design-patterns/catalog) — обзор, куда смотреть дальше
 - [Open–closed principle](https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle) — новый handler без правки Dispatcher
 - [ARCHITECTURE.md](ARCHITECTURE.md) — sequence и UML шага Dispatcher / Handler
+- [diagrams/](diagrams/) — SVG для слайдов (было/стало, цепочка, sequence, слои)
 
 **Python**
 

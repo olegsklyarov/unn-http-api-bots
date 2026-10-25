@@ -1,3 +1,11 @@
+"""Тонкий HTTP-клиент Telegram Bot API.
+
+Вынесен в модуль, чтобы отделить транспорт от логики бота.
+https://docs.python.org/3/tutorial/modules.html
+https://docs.python.org/3/library/urllib.request.html
+https://core.telegram.org/bots/api
+"""
+
 import json
 import os
 import urllib.parse

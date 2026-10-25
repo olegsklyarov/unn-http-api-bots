@@ -1,3 +1,10 @@
+"""Кнопка «Сырой JSON»: показать reply_to_message из callback update.
+
+Сначала answerCallbackQuery — иначе у кнопки крутятся «часики».
+https://core.telegram.org/bots/api#answercallbackquery
+Данные — из update, не из data/updates/. STOP после ответа.
+"""
+
 import json
 
 from bot import telegram_bot_api

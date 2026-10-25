@@ -1,3 +1,9 @@
+"""Echo текста с reply и inline-кнопками.
+
+reply_to_message_id нужен, чтобы в callback был исходный Message пользователя.
+InlineKeyboardButton: https://core.telegram.org/bots/api#inlinekeyboardbutton
+"""
+
 import json
 
 from bot import telegram_bot_api

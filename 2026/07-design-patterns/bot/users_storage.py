@@ -1,3 +1,10 @@
+"""Актуальное состояние пользователей в data/users.json.
+
+Достаём User из Update по типу payload; upsert с created_at / updated_at.
+https://core.telegram.org/bots/api#user
+https://docs.python.org/3/library/json.html
+"""
+
 import json
 import time
 from pathlib import Path

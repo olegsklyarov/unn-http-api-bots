@@ -1,3 +1,12 @@
+"""Регистрация handlers для Dispatcher.
+
+Порядок списка ВАЖЕН — это политика бота, не «просто импорты»:
+1) Persist* всегда срабатывают и возвращают CONTINUE (side effects на диск);
+2) затем узкие callback / echo, обычно STOP.
+
+Смена порядка = смена поведения. См. ../../ARCHITECTURE.md и ../../README.md (шаг 10).
+"""
+
 from bot.handler import Handler
 from bot.handlers.callback_hide import CallbackHide
 from bot.handlers.callback_raw_json import CallbackRawJson

@@ -2,6 +2,8 @@
 
 Диаграммы к шагу 10 (тег `2026-fall-07-step-11`). Паттерн — [цепочка обязанностей](https://refactoring.guru/ru/design-patterns/chain-of-responsibility); контракт handlers — [`abc`](https://docs.python.org/3/library/abc.html).
 
+Слайдовые SVG: каталог [diagrams/](diagrams/).
+
 ## Как это работает во времени (для доски)
 
 ```mermaid

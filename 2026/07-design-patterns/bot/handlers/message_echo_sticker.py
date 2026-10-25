@@ -1,3 +1,8 @@
+"""Echo стикера по file_id + те же inline-кнопки.
+
+sendSticker: https://core.telegram.org/bots/api#sendsticker
+"""
+
 import json
 
 from bot import telegram_bot_api

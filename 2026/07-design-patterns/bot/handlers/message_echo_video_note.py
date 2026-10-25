@@ -1,3 +1,8 @@
+"""Echo video note (кружок) по file_id + inline-кнопки.
+
+sendVideoNote: https://core.telegram.org/bots/api#sendvideonote
+"""
+
 import json
 
 from bot import telegram_bot_api

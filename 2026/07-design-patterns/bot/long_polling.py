@@ -1,3 +1,9 @@
+"""Long polling: достаём updates и отдаём в Dispatcher.
+
+Без бизнес-логики echo/callback — только I/O и offset.
+Getting updates: https://core.telegram.org/bots/api#getting-updates
+"""
+
 import json
 
 from bot import telegram_bot_api

@@ -1,3 +1,9 @@
+"""Upsert пользователя из Update в data/users.json.
+
+Как PersistUpdate: всегда can_handle, всегда CONTINUE.
+User в Update: https://core.telegram.org/bots/api#user
+"""
+
 from bot import users_storage
 from bot.handler import Handler
 from bot.handler import HandlerStatus

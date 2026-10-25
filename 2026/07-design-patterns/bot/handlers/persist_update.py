@@ -1,3 +1,8 @@
+"""Первый handler в цепочке: сохранить Update на диск.
+
+can_handle всегда True; CONTINUE — чтобы дальше шли users и echo/callback.
+"""
+
 from bot import updated_logger
 from bot.handler import Handler
 from bot.handler import HandlerStatus
