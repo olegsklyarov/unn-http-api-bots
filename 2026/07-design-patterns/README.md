@@ -14,6 +14,7 @@
 | 6 | `2026-fall-07-step-07` | Inline-кнопки под echo: сырой JSON и скрыть клавиатуру |
 | 7 | `2026-fall-07-step-08` | Telegram Bot API клиент вынесен в `bot/telegram_bot_api.py` |
 | 8 | `2026-fall-07-step-09` | Persist updates вынесен в `bot/updated_logger.py` |
+| 9 | `2026-fall-07-step-10` | Users storage вынесен в `bot/users_storage.py` |
 
 ## Шаг 0 — echo-бот
 
@@ -66,6 +67,11 @@ HTTP-клиент Telegram Bot API (`api_request`, `get_updates`, `send_message`
 
 Запись входящих updates на диск (`persist_update` → `data/updates/<update_id>.json`) вынесена в [`bot/updated_logger.py`](bot/updated_logger.py).
 В `__main__.py`: `updated_logger.persist_update(update)`. Логика бота и «логгер» updates разделены по модулям.
+
+## Шаг 9 — модуль `bot/users_storage.py`
+
+Работа с `data/users.json` (`persist_user`, `user_from_update`, формат файла) вынесена в [`bot/users_storage.py`](bot/users_storage.py).
+В `__main__.py`: `users_storage.persist_user(update)`. Хранение пользователей отделено от цикла обработки updates.
 
 ## Переключение шагов
 
