@@ -18,3 +18,9 @@ def test_callable_via_def():
     })
 
     assert obj.add(2, 3) == 5
+
+
+if __name__ == "__main__":
+    test_callable_via_lambda()
+    test_callable_via_def()
+
