@@ -6,6 +6,7 @@ from pathlib import Path
 from bot.storage import Storage
 
 USERS_PATH = Path("data/users.json")
+UPDATES_DIR = Path("data/updates")
 
 # Update payloads that wrap a Message (optional .from)
 _MESSAGE_KEYS = (
@@ -38,7 +39,7 @@ _USER_KEYS = (
 )
 
 
-class JsonUsersStorage(Storage):
+class JsonFilesStorage(Storage):
     def __init__(self, path: Path = USERS_PATH) -> None:
         self._path = path
 
@@ -141,3 +142,11 @@ class JsonUsersStorage(Storage):
             }
 
         self._write_users(users)
+
+    def persist_update(self, update: dict) -> None:
+        UPDATES_DIR.mkdir(parents=True, exist_ok=True)
+        path = UPDATES_DIR / f"{update['update_id']}.json"
+        path.write_text(
+            json.dumps(update, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )

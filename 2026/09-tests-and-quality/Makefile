@@ -13,3 +13,4 @@ test:
 	PYTHONPATH=.:tests python3 tests/test_mock_attributes.py
 	PYTHONPATH=.:tests python3 tests/test_mock_callable.py
 	PYTHONPATH=.:tests python3 tests/test_long_polling.py
+	PYTHONPATH=.:tests python3 tests/test_dispatch_persist_update.py

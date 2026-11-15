@@ -15,5 +15,9 @@ class Storage(ABC):
         pass
 
     @abstractmethod
+    def persist_update(self, update: dict) -> None:
+        pass
+
+    @abstractmethod
     def default_state(self) -> dict:
         pass
