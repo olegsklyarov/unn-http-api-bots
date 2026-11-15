@@ -1,0 +1,16 @@
+[project]
+name = "tests-and-quality"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "mypy",
+]
+
+[tool.mypy]
+python_version = "3.14"
+explicit_package_bases = true
+packages = ["bot"]
