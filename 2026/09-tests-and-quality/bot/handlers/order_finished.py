@@ -1,6 +1,5 @@
 from bot import pizza_menu
-from bot.handler import Handler
-from bot.handler import HandlerStatus
+from bot.handler import Handler, HandlerStatus
 from bot.messenger import Messenger
 from bot.storage import Storage
 
@@ -29,6 +28,10 @@ class OrderFinished(Handler):
         messenger.answer_callback_query(callback_query_id=cq["id"])
         message = cq.get("message")
         if message is not None:
+            messenger.delete_message(
+                chat_id=message["chat"]["id"],
+                message_id=message["message_id"],
+            )
             messenger.send_message(
                 chat_id=message["chat"]["id"],
                 text=pizza_menu.MSG_ORDER_FINISHED_HINT,

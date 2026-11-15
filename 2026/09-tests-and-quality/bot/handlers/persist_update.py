@@ -1,6 +1,4 @@
-from bot import updated_logger
-from bot.handler import Handler
-from bot.handler import HandlerStatus
+from bot.handler import Handler, HandlerStatus
 from bot.messenger import Messenger
 from bot.storage import Storage
 
@@ -22,5 +20,5 @@ class PersistUpdate(Handler):
         storage: Storage,
         messenger: Messenger,
     ) -> HandlerStatus:
-        updated_logger.persist_update(update)
+        storage.persist_update(update)
         return HandlerStatus.CONTINUE

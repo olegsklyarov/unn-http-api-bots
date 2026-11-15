@@ -51,10 +51,11 @@ __main__ → Dispatcher + handlers → long_polling (getUpdates)
 ```
 
 - [`bot/handler.py`](bot/handler.py) — абстрактный `Handler` + `HandlerStatus` (`CONTINUE` / `STOP`)
-- [`bot/dispatcher.py`](bot/dispatcher.py) — резолвит state из `users_storage` и передаёт в handlers
-- [`bot/users_storage.py`](bot/users_storage.py) — `users.json`, `get_user_state` / `save_user_state` / `default_state`
-- [`bot/telegram_bot_api.py`](bot/telegram_bot_api.py) — HTTP-клиент Bot API
-- [`bot/updated_logger.py`](bot/updated_logger.py) — `data/updates/<update_id>.json`
+- [`bot/dispatcher.py`](bot/dispatcher.py) — резолвит state из `files_storage` и передаёт в handlers
+- [`bot/storage.py`](bot/storage.py) — интерфейс Storage (`get_user_state` / `save_user_state` / `persist_user` / `persist_update` / `default_state`)
+- [`bot/files_storage.py`](bot/files_storage.py) — MVP на JSON-файлах: `users.json` + `data/updates/<update_id>.json`
+- [`bot/telegram_bot_api.py`](bot/telegram_bot_api.py) — тонкий HTTP-клиент Bot API (функции)
+- [`bot/telegram_messenger.py`](bot/telegram_messenger.py) — реализация `Messenger` поверх `telegram_bot_api`
 - [`bot/long_polling.py`](bot/long_polling.py) — цикл `getUpdates` (`message` + `callback_query`)
 
 ### Порядок handlers

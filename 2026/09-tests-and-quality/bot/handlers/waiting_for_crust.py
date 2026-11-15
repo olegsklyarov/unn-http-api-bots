@@ -1,6 +1,5 @@
 from bot import pizza_menu
-from bot.handler import Handler
-from bot.handler import HandlerStatus
+from bot.handler import Handler, HandlerStatus
 from bot.messenger import Messenger
 from bot.storage import Storage
 
@@ -32,13 +31,20 @@ class WaitingForCrust(Handler):
     ) -> HandlerStatus:
         cq = update["callback_query"]
         messenger.answer_callback_query(callback_query_id=cq["id"])
+        message = cq["message"]
+        messenger.delete_message(
+            chat_id=message["chat"]["id"],
+            message_id=message["message_id"],
+        )
         crust = pizza_menu.parse_callback_data(cq["data"], "crust")
         state["order_content"]["crust"] = crust
         state["current_state"] = "waiting_for_drink"
         storage.save_user_state(cq["from"]["id"], state)
         messenger.send_message(
-            chat_id=cq["message"]["chat"]["id"],
-            text=pizza_menu.MSG_CHOOSE_DRINK,
+            chat_id=message["chat"]["id"],
+            text=pizza_menu.step_message(
+                state["order_content"], pizza_menu.MSG_CHOOSE_DRINK
+            ),
             reply_markup=pizza_menu.drinks_keyboard(),
         )
         return HandlerStatus.STOP

@@ -1,15 +1,15 @@
 from bot import long_polling
 from bot.dispatcher import Dispatcher
+from bot.files_storage import JsonFilesStorage
 from bot.handlers import get_handlers
 from bot.messenger import Messenger
 from bot.storage import Storage
-from bot.telegram_bot_api import TelegramMessenger
-from bot.users_storage import JsonUsersStorage
+from bot.telegram_messenger import TelegramMessenger
 
 
 def main() -> None:
     try:
-        storage: Storage = JsonUsersStorage()
+        storage: Storage = JsonFilesStorage()
         messenger: Messenger = TelegramMessenger()
         dispatcher = Dispatcher(storage, messenger)
         dispatcher.add_handlers(*get_handlers())
