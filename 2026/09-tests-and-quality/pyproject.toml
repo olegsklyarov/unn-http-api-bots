@@ -10,6 +10,10 @@ dev = [
     "mypy",
 ]
 
+[tool.ruff.lint.per-file-ignores]
+# Учебный Mock в tests/mock.py, не unittest.mock.
+"tests/**" = ["UP026"]
+
 [tool.mypy]
 python_version = "3.14"
 explicit_package_bases = true

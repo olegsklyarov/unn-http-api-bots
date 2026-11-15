@@ -11,4 +11,3 @@ def test_keys_become_attributes():
 
 if __name__ == "__main__":
     test_keys_become_attributes()
-

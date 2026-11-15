@@ -1,5 +1,4 @@
-from bot.handler import Handler
-from bot.handler import HandlerStatus
+from bot.handler import Handler, HandlerStatus
 from bot.messenger import Messenger
 from bot.storage import Storage
 

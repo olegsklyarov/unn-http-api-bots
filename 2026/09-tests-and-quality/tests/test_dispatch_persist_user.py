@@ -1,9 +1,10 @@
+from mock import Mock
+
 from bot.dispatcher import Dispatcher
 from bot.handlers.persist_user import PersistUser
 from bot.messenger import Messenger
 from bot.storage import Storage
 from bot.telegram_messenger import TelegramMessenger
-from mock import Mock
 
 
 def test_dispatch_persist_user():
@@ -39,14 +40,18 @@ def test_dispatch_persist_user():
         assert captured_update["message"]["chat"]["type"] == "private"
         assert captured_update["message"]["text"] == "Hello world"
 
-    storage: Storage = Mock({
-        "get_user_state": mock_get_user_state,
-        "persist_user": mock_persist_user,
-    })
+    storage: Storage = Mock(
+        {
+            "get_user_state": mock_get_user_state,
+            "persist_user": mock_persist_user,
+        }
+    )
     # Реальный user_id_from_update, остальные методы Messenger не трогаем (нет HTTP).
-    messenger: Messenger = Mock({
-        "user_id_from_update": TelegramMessenger().user_id_from_update,
-    })
+    messenger: Messenger = Mock(
+        {
+            "user_id_from_update": TelegramMessenger().user_id_from_update,
+        }
+    )
 
     dispatcher = Dispatcher(storage, messenger)
     dispatcher.add_handlers(PersistUser())

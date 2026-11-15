@@ -1,5 +1,3 @@
-from typing import Optional
-
 from bot import telegram_bot_api
 from bot.messenger import Messenger
 
@@ -65,7 +63,7 @@ class TelegramMessenger(Messenger):
                 return update[key].get("user")
         return None
 
-    def user_id_from_update(self, update: dict) -> Optional[int]:
+    def user_id_from_update(self, update: dict) -> int | None:
         user = self.user_from_update(update)
         if user is None:
             return None

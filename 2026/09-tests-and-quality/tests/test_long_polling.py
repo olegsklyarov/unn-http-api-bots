@@ -1,7 +1,8 @@
+from mock import Mock
+
 from bot.dispatcher import Dispatcher
 from bot.long_polling import start_long_polling
 from bot.messenger import Messenger
-from mock import Mock
 
 
 def test_single_update_dispatches_and_advances_offset():

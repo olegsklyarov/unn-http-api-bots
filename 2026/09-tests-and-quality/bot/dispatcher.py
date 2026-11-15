@@ -1,5 +1,4 @@
-from bot.handler import Handler
-from bot.handler import HandlerStatus
+from bot.handler import Handler, HandlerStatus
 from bot.messenger import Messenger
 from bot.storage import Storage
 
@@ -20,6 +19,9 @@ class Dispatcher:
             return
         state = self._storage.get_user_state(user_id)
         for handler in self._handlers:
-            if handler.can_handle(update, state, self._storage, self._messenger):
-                if handler.handle(update, state, self._storage, self._messenger) == HandlerStatus.STOP:
-                    break
+            if (
+                handler.can_handle(update, state, self._storage, self._messenger)
+                and handler.handle(update, state, self._storage, self._messenger)
+                == HandlerStatus.STOP
+            ):
+                break

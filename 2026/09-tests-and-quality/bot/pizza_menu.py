@@ -1,5 +1,4 @@
 import json
-from typing import Optional
 
 RECIPES = [
     ("pepperoni", "Пепперони"),
@@ -29,9 +28,7 @@ DRINKS = [
 ]
 
 _LABELS = {
-    key: label
-    for options in (RECIPES, SIZES, CRUSTS, DRINKS)
-    for key, label in options
+    key: label for options in (RECIPES, SIZES, CRUSTS, DRINKS) for key, label in options
 }
 
 MSG_CHOOSE_RECIPE = "Собери пиццу. Выбери рецепт:"
@@ -73,7 +70,7 @@ def drinks_keyboard() -> str:
     return _keyboard("drink", DRINKS)
 
 
-def parse_callback_data(data: str, prefix: str) -> Optional[str]:
+def parse_callback_data(data: str, prefix: str) -> str | None:
     expected = f"{prefix}:"
     if not data.startswith(expected):
         return None

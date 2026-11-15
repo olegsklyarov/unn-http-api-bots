@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import Optional
 
 
 class Messenger(ABC):
     @abstractmethod
-    def user_id_from_update(self, update: dict) -> Optional[int]:
+    def user_id_from_update(self, update: dict) -> int | None:
         pass
 
     @abstractmethod
