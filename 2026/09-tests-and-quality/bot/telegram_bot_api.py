@@ -7,7 +7,7 @@ import urllib.request
 def api_request(method, **params):
     token = os.environ["TELEGRAM_TOKEN"]
     base_url = os.environ["TELEGRAM_BASE_URL"]
-    url = f"{base_url}{token}/{method}"
+    url = f"{base_url}/bot{token}/{method}"
     data = urllib.parse.urlencode(params).encode()
     with urllib.request.urlopen(url, data=data) as r:
         payload = json.loads(r.read())
@@ -33,6 +33,10 @@ def send_video_note(**params):
 
 def answer_callback_query(**params):
     return api_request("answerCallbackQuery", **params)
+
+
+def delete_message(**params):
+    return api_request("deleteMessage", **params)
 
 
 def edit_message_reply_markup(**params):

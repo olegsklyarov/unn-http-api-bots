@@ -48,6 +48,9 @@ class TelegramMessenger(Messenger):
     def answer_callback_query(self, **params):
         return telegram_bot_api.answer_callback_query(**params)
 
+    def delete_message(self, **params):
+        return telegram_bot_api.delete_message(**params)
+
     def edit_message_reply_markup(self, **params):
         return telegram_bot_api.edit_message_reply_markup(**params)
 

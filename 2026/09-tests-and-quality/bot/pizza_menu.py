@@ -78,16 +78,30 @@ def parse_callback_data(data: str, prefix: str) -> str | None:
     return value or None
 
 
+_ORDER_FIELDS = (
+    ("recipe", "Рецепт"),
+    ("size", "Размер"),
+    ("crust", "Бортик"),
+    ("drink", "Напиток"),
+)
+
+
+def format_order_progress(order_content: dict) -> str:
+    lines = []
+    for key, title in _ORDER_FIELDS:
+        value = order_content.get(key)
+        if value is not None:
+            lines.append(f"• {title}: {label_for(value)}")
+    return "\n".join(lines)
+
+
+def step_message(order_content: dict, prompt: str) -> str:
+    progress = format_order_progress(order_content)
+    if not progress:
+        return prompt
+    return f"Заказ:\n{progress}\n\n{prompt}"
+
+
 def format_order_summary(order_content: dict) -> str:
-    recipe = label_for(order_content["recipe"])
-    size = label_for(order_content["size"])
-    crust = label_for(order_content["crust"])
-    drink = label_for(order_content["drink"])
-    return (
-        "Заказ принят:\n"
-        f"• Рецепт: {recipe}\n"
-        f"• Размер: {size}\n"
-        f"• Бортик: {crust}\n"
-        f"• Напиток: {drink}\n\n"
-        "Новый заказ: /start"
-    )
+    progress = format_order_progress(order_content)
+    return f"Заказ принят:\n{progress}\n\nНовый заказ: /start"

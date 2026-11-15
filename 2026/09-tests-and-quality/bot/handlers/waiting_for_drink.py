@@ -31,12 +31,17 @@ class WaitingForDrink(Handler):
     ) -> HandlerStatus:
         cq = update["callback_query"]
         messenger.answer_callback_query(callback_query_id=cq["id"])
+        message = cq["message"]
+        messenger.delete_message(
+            chat_id=message["chat"]["id"],
+            message_id=message["message_id"],
+        )
         drink = pizza_menu.parse_callback_data(cq["data"], "drink")
         state["order_content"]["drink"] = drink
         state["current_state"] = "order_finished"
         storage.save_user_state(cq["from"]["id"], state)
         messenger.send_message(
-            chat_id=cq["message"]["chat"]["id"],
+            chat_id=message["chat"]["id"],
             text=pizza_menu.format_order_summary(state["order_content"]),
         )
         return HandlerStatus.STOP
